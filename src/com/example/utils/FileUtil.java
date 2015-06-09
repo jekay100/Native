@@ -22,17 +22,15 @@ import org.apache.log4j.Logger;
 
 
 /**
- * <pre>
- * 文件操作类.
- * @version  $Revision: 1.0 $
- * @author LangMingSheng
+ * 文件操作工具类
  */
 public class FileUtil {
 	/**
 	* 功能的简:log4j设置.
 	*/
-	private static org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(FileUtil.class.getName());
+	private static Logger logger = Logger.getLogger(FileUtil.class);
     
+	
      /**
      * 删除文件或空目录
      * @param fullFilePath 文件或目录的绝对路径
@@ -81,6 +79,7 @@ public class FileUtil {
         }
     }
     
+    
     /**  
      * 删除目录（文件夹）以及目录下的文件  
      * @param   dir 被删除目录的文件路径  
@@ -126,9 +125,9 @@ public class FileUtil {
         }   
     }   
 
+    
     /**
      * 拷贝文件
-     *
      * @param srcFile 源文件
      * @param dstFile 目标文件
      * @throws IOException
@@ -215,6 +214,7 @@ public class FileUtil {
             return false;
     }
     
+    
     /**
      * 读取文件内容
      * @param filename 文件名
@@ -246,6 +246,7 @@ public class FileUtil {
         return result.toString();
     }
     
+    
     /**
 	 * 写字符串到文件
 	 * @param fileDir 要输出的文件目录
@@ -272,6 +273,7 @@ public class FileUtil {
 		}
 		return ok;
 	}
+	
 	
     /**
 	 * 得到文件写句丙 
@@ -316,13 +318,9 @@ public class FileUtil {
    
 	/**
      * 把给定的 document 写入 filename 文件中
-     * 
-     * @param document -
-     *            xml document
-     * @param filename -
-     *            要写入的文件路径加文件名
-     * @param encoding -
-     *            文件编码
+     * @param document - xml document
+     * @param filename - 要写入的文件路径加文件名
+     * @param encoding - 文件编码
      * @return 成功 true，失败 false
      */
     public static boolean writeXML(String document, String filename, String encoding){

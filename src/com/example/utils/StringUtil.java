@@ -1,15 +1,9 @@
-/**
- * 软件著作权：学科网
- * 系统名称：xy360
- * 创建日期： 2015-01-09
- */
 package com.example.utils;
 
 /**
- * @version 1.0
- * @author LiaoGang
+ * Strin 相关的工具类
+ * @author anonymous
  */
-
 public class StringUtil {
 	
 	/**
@@ -19,6 +13,7 @@ public class StringUtil {
 	public static String getLineSeparator(){
 		return System.getProperty("line.separator");
 	}
+	
 	
 	/** 
      * Remove occurences of html, defined as any text 
@@ -30,7 +25,6 @@ public class StringUtil {
      * @param addSpace 
      */  
     public static String removeHTML(String str, boolean addSpace) {  
-          
         if(str == null) return "";  
         StringBuffer ret = new StringBuffer(str.length());  
         int start = 0;  
@@ -41,31 +35,21 @@ public class StringUtil {
         while(beginTag >= start) {  
             if(beginTag > 0) {  
                 ret.append(str.substring(start, beginTag));  
-                  
-                // replace each tag with a space (looks better)  
                 if(addSpace) ret.append(" ");  
             }  
             endTag = str.indexOf(">", beginTag);  
-              
-            // if endTag found move "cursor" forward  
             if(endTag > -1) {  
                 start = endTag + 1;  
                 beginTag = str.indexOf("<", start);  
             }  
-              
-            // if no endTag found, get rest of str and break  
             else {  
                 ret.append(str.substring(beginTag));  
                 break;  
             }  
         }  
-        // append everything after the last endTag  
         if(endTag >-1 && endTag + 1 < str.length()) {  
             ret.append(str.substring(endTag + 1));  
         }  
-        
-        //System.out.println(ret.toString());  
-          
         return removeBlank(ret.toString().trim());
     }  
 
