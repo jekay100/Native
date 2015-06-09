@@ -1,7 +1,13 @@
 package com.example.dao.impl;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.dbutils.QueryRunner;
@@ -110,4 +116,28 @@ public class BaseDaoImpl<T> implements BaseDao {
 			throw new DBException(e);
 		}
 	}
+	
+	
+	/**
+	 * 获取保存对象的sql语句
+	 * @param object
+	 * @return
+	 */
+	protected String getSaveObjectSql(T t) {
+		StringBuffer sql = new StringBuffer("");
+		String tableName = t.getClass().getSimpleName().toLowerCase();
+		sql.append("insert into ")
+			.append(tableName)
+			.append(" (");
+		
+		
+		
+		
+		
+		
+		
+		
+		return sql.toString();
+	}
+
 }
