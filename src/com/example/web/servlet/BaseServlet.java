@@ -27,7 +27,7 @@ public class BaseServlet extends HttpServlet {
 		 * 请求参数中带method, 可以使一个servlet处理多个不同的请求
 		 */
 		String methodName = request.getParameter("method");
-		Method method;
+		Method method = null;
 		try {
 			method = this.getClass().getMethod(methodName, HttpServletRequest.class, HttpServletResponse.class);
 			method.invoke(this, request, response);

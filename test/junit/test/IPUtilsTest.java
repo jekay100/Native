@@ -2,7 +2,7 @@ package junit.test;
 
 import org.junit.Test;
 
-import com.example.util.IPUtils;
+import com.example.utils.IPUtils;
 
 public class IPUtilsTest {
 	@Test

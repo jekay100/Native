@@ -1,11 +1,7 @@
-/**
- * 软件著作权：学科网
- * 系统名称：xy360
- * 创建日期： 2015-05-12
- */
-package com.example.util;
+package com.example.utils;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -18,6 +14,7 @@ import net.sf.json.JSONObject;
  * @version 1.0
  */
 public class IPUtils {
+	
 	//淘宝ip地址归属地查询的公共接口
 	private static final String TB_INTERFACE = "http://ip.taobao.com/service/getIpInfo.php?ip=";
 	private JSONObject resultJSON = null;
@@ -27,6 +24,7 @@ public class IPUtils {
 	public IPUtils(String ip) {
 		URL url = null;
 		HttpURLConnection httpConn = null;
+		BufferedReader reader = null;
 		try {
 			url = new URL(TB_INTERFACE+ip);
 			httpConn = (HttpURLConnection) url.openConnection();
@@ -35,7 +33,7 @@ public class IPUtils {
 			httpConn.setDoInput(true);
 			httpConn.connect();
 			
-			BufferedReader reader = new BufferedReader(new InputStreamReader(httpConn.getInputStream()));
+			reader = new BufferedReader(new InputStreamReader(httpConn.getInputStream()));
 			String line;
 			buf = new StringBuffer("");
 			while ((line = reader.readLine()) != null) {
@@ -46,7 +44,18 @@ public class IPUtils {
 				dataJSON = resultJSON.getJSONObject("data");
 			}
 		} catch (Exception e) {
-			System.out.println("xy360 log: 淘宝ip接口请求异常: "+e.getMessage());
+			
+		} finally {
+			if(reader!=null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(httpConn!=null) {
+				httpConn.disconnect();
+			}
 		}
 	}
 	
@@ -60,9 +69,16 @@ public class IPUtils {
 		return buf.toString();
 	}
 	
-	//获取状态码
+	/**
+	 * 获取状态码,0成功,1失败
+	 * @return
+	 */
 	public int getCode() {
-		return resultJSON.getInt("code");
+		if(resultJSON!=null) {
+			return resultJSON.getInt("code");
+		} else {
+			return 1;
+		}
 	}
 	
 	//获取结果数据对象, 可能是json格式的对象也可能是字符串()
