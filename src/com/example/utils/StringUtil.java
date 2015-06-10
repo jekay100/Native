@@ -96,4 +96,21 @@ public class StringUtil {
     	return sb.toString().replace("&nbsp;", " ").replace("<br>", " ").replace("<br/>", " ");
     }
     
+    
+    /**
+     * 实体属性对应数据库列名时的格式转换
+     * @param propertyName
+     * @return
+     */
+    public static String formatPropertyName(String propertyName) {
+    	StringBuffer buf = new StringBuffer("");
+    	for(char ch : propertyName.toCharArray()) {
+    		if(ch>=65 && ch<=90) {
+    			buf.append("_").append((char)(ch+32));
+    		} else {
+    			buf.append(ch);
+    		}
+    	}
+    	return buf.toString();
+    }
 }  

@@ -1,11 +1,8 @@
 package com.example.dao.impl;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +15,7 @@ import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import com.example.dao.BaseDao;
 import com.example.exception.DBException;
+import com.example.utils.DateUtils;
 import com.example.utils.JDBCUtils;
 import com.example.utils.ReflectionUtils;
 
@@ -29,7 +27,13 @@ public class BaseDaoImpl<T> implements BaseDao {
 		clazz = ReflectionUtils.getClassGenricType(this.getClass());
 	}
 	
-
+	
+	public void saveOrUpdate(T t) {
+		Object[] args = getSaveObjectSql(t);
+		update((String) args[0], (Object[])args[1]);
+	}
+	
+	
 	/**
 	 * 通用的增删改方法
 	 * @param sql
@@ -123,21 +127,33 @@ public class BaseDaoImpl<T> implements BaseDao {
 	 * @param object
 	 * @return
 	 */
-	protected String getSaveObjectSql(T t) {
-		StringBuffer sql = new StringBuffer("");
+	public Object[] getSaveObjectSql(T t) {
+		StringBuffer mBuf = new StringBuffer("");
+		StringBuffer vBuf = new StringBuffer("");
 		String tableName = t.getClass().getSimpleName().toLowerCase();
-		sql.append("insert into ")
+		mBuf.append("insert into ")
 			.append(tableName)
 			.append(" (");
-		
-		
-		
-		
-		
-		
-		
-		
-		return sql.toString();
+		vBuf.append(" values(");
+		List<Object> vList = new ArrayList<>();
+		Field[] fields = t.getClass().getDeclaredFields();
+		for(Field field : fields) {
+			String fieldName = field.getName();
+			Object fieldValue = ReflectionUtils.invokeGetter(t, fieldName);
+			if(fieldValue == null) {
+			} else if(fieldValue instanceof Date) {
+				Date date = (Date) fieldValue;
+				fieldValue = DateUtils.getDateTimeHtmStr(date);
+			}
+			mBuf.append(fieldName+",");
+			vBuf.append("?,");
+			vList.add(fieldValue);
+		}
+		mBuf.deleteCharAt(mBuf.length()-1).append(")");
+		vBuf.deleteCharAt(vBuf.length()-1).append(")");
+		String sql = mBuf.toString()+vBuf.toString();
+		Object[] results = new Object[]{sql,vList.toArray()};
+		return results;
 	}
 
 }
