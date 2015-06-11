@@ -15,7 +15,7 @@ public class TestPicture {
 //		imgCompress.resizeFix(600, 400);
 		
 		CompressPic pic = new CompressPic();
-		pic.compressPic("G://1.jpg", "G://", null,"6.jpg",1000,2000,true);
+		pic.compressPic("G://1.jpg", "G://", null,"6.png",1000,2000,true);
 		
 	}
 }
