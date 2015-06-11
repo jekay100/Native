@@ -117,6 +117,10 @@ public class CompressPic {
 				if (!f.exists()){
 					f.mkdirs(); 
 				}
+				f=new File(outputDir+outputFileName);
+				if(f.exists() && f.isFile()) {
+					f.delete();
+				}
 				FileOutputStream out = new FileOutputStream(outputDir
 						+ outputFileName);
 				// JPEGImageEncoder可适用于其他图片类型的转换
@@ -130,12 +134,12 @@ public class CompressPic {
 		return "ok";
 	}
 
-	public String compressPic(String outputDir, String inputFileName,
+	public String compressPic(String outputDir, String inputDir,
 			String outputFileName) {
 		// 输出图路径
 		this.outputDir = outputDir;
 		// 输入图文件名
-		this.inputFileName = inputFileName;
+		this.inputDir = inputDir;
 		// 输出图文件名
 		this.outputFileName = outputFileName;
 		return compressPic();
