@@ -1,9 +1,6 @@
 package junit.test;
 
-import java.io.IOException;
-
 import org.junit.Test;
-
 import com.example.utils.CompressPic;
 
 public class TestPicture {
