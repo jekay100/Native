@@ -23,7 +23,7 @@ public class ImgUtil {
 	}
 	
 	/**
-	 * 获取指定图片的高
+	 * 获取图片的高
 	 * @param filePath
 	 * @return
 	 */
@@ -32,7 +32,7 @@ public class ImgUtil {
 	}
 	
 	/**
-	 * 获取指定图片的高
+	 * 获取图片的高
 	 * @param filePath
 	 * @return
 	 */
@@ -41,22 +41,22 @@ public class ImgUtil {
 	}
 	
 	/**
-	 * @param filePath
-	 * @param w
-	 * @param h
-	 * @param outDir
-	 * @param filename
+	 * 图片压缩,图片尺寸的修改
+	 * @param w int 新宽度
+	 * @param h int 新高度
+	 * @param outDir 输出文件夹
+	 * @param filename 输出文件名
 	 * @throws IOException
 	 */
 	public boolean resize(int w, int h, String outDir, String filename) throws IOException {
 		if (width / height > w / h) {
 			// 以宽度为基准，等比例放缩图片
 			int newHight = (int) (height * w / width);
-			return resizeFix(img, w, newHight, outDir, filename);
+			return resizeFix(w, newHight, outDir, filename);
 		} else {
 			// 以高度为基准，等比例缩放图片
 			int newWidth = (int) (width * h / height);
-			return resizeFix(img, newWidth, h, outDir, filename);
+			return resizeFix(newWidth, h, outDir, filename);
 		}
 	}
 
@@ -64,8 +64,12 @@ public class ImgUtil {
 	 * 强制压缩/放大图片到固定的大小
 	 * @param w int 新宽度
 	 * @param h int 新高度
+	 * @param outDir 输出文件夹
+	 * @param filename 输出文件名
+	 * @return
+	 * @throws IOException
 	 */
-	private boolean resizeFix(Image img, int w, int h, String outDir, String filename)
+	private boolean resizeFix(int w, int h, String outDir, String filename)
 			throws IOException {
 		// SCALE_SMOOTH 的缩略算法 生成缩略图片的平滑度的 优先级比速度高 生成的图片质量比较好 但速度慢
 		BufferedImage image = new BufferedImage(w, h,
