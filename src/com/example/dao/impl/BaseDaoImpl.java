@@ -16,9 +16,9 @@ import org.apache.log4j.Logger;
 
 import com.example.dao.BaseDao;
 import com.example.exception.DBException;
-import com.example.utils.DateUtils;
-import com.example.utils.JDBCUtils;
-import com.example.utils.ReflectionUtils;
+import com.example.utils.DateUtil;
+import com.example.utils.JDBCUtil;
+import com.example.utils.ReflectionUtil;
 
 public class BaseDaoImpl<T> implements BaseDao {
 	private static Logger logger = Logger.getLogger(BaseDaoImpl.class);
@@ -26,7 +26,7 @@ public class BaseDaoImpl<T> implements BaseDao {
 	
 	private Class<T> clazz = null;
 	{
-		clazz = ReflectionUtils.getClassGenricType(this.getClass());
+		clazz = ReflectionUtil.getClassGenricType(this.getClass());
 	}
 	
 	
@@ -44,7 +44,7 @@ public class BaseDaoImpl<T> implements BaseDao {
 	public void update(String sql, Object ... args) {
 		Connection conn = null;
 		try {
-			conn = JDBCUtils.getConnection();
+			conn = JDBCUtil.getConnection();
 			runner.update(conn, sql, args);
 		} catch (SQLException e) {
 			logger.debug(e.getMessage());
@@ -63,7 +63,7 @@ public class BaseDaoImpl<T> implements BaseDao {
 		ResultSetHandler<T> hanlder = new BeanHandler<T>(clazz);
 		Connection conn = null;
 		try {
-			conn = JDBCUtils.getConnection();
+			conn = JDBCUtil.getConnection();
 			return runner.query(conn, sql, hanlder, args);
 		} catch (SQLException e) {
 			logger.debug(e.getMessage());
@@ -82,7 +82,7 @@ public class BaseDaoImpl<T> implements BaseDao {
 		ResultSetHandler<List<T>> handler = new BeanListHandler<T>(clazz);
 		Connection conn = null;
 		try {
-			conn = JDBCUtils.getConnection();
+			conn = JDBCUtil.getConnection();
 			return runner.query(conn, sql, handler, args);
 		} catch (SQLException e) {
 			throw new DBException(e);
@@ -101,7 +101,7 @@ public class BaseDaoImpl<T> implements BaseDao {
 		Connection conn = null;
 		K k = null;
 		try {
-			conn = JDBCUtils.getConnection();
+			conn = JDBCUtil.getConnection();
 			k = (K) runner.query(conn, sql, new ScalarHandler(), args);
 		} catch (SQLException e) {
 			throw new DBException(e);
@@ -118,7 +118,7 @@ public class BaseDaoImpl<T> implements BaseDao {
 	public void batchUpdate(String sql,Object[][] params){
 		Connection conn = null;
 		try{
-			conn = JDBCUtils.getConnection();
+			conn = JDBCUtil.getConnection();
 			runner.batch(conn, sql, params);
 		} catch(SQLException e){
 			logger.debug(e.getMessage());
@@ -144,11 +144,11 @@ public class BaseDaoImpl<T> implements BaseDao {
 		Field[] fields = t.getClass().getDeclaredFields();
 		for(Field field : fields) {
 			String fieldName = field.getName();
-			Object fieldValue = ReflectionUtils.invokeGetter(t, fieldName);
+			Object fieldValue = ReflectionUtil.invokeGetter(t, fieldName);
 			if(fieldValue == null) {
 			} else if(fieldValue instanceof Date) {
 				Date date = (Date) fieldValue;
-				fieldValue = DateUtils.getDateTimeHtmStr(date);
+				fieldValue = DateUtil.getDateTimeHtmStr(date);
 			}
 			mBuf.append(fieldName+",");
 			vBuf.append("?,");

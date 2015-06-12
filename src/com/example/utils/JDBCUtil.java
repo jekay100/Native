@@ -19,8 +19,8 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
  * @author Administrator
  */
 
-public class JDBCUtils {
-	private static Logger logger = Logger.getLogger(JDBCUtils.class);
+public class JDBCUtil {
+	private static Logger logger = Logger.getLogger(JDBCUtil.class);
 	//二级缓存
 	private static DataSource ds = null ;
 	//类似一级缓存

@@ -15,15 +15,15 @@ import net.sf.json.JSONObject;
  * @author LiaoGang
  * @version 1.0
  */
-public class IPUtils {
-	private Logger logger = Logger.getLogger(IPUtils.class);
+public class IPUtil {
+	private Logger logger = Logger.getLogger(IPUtil.class);
 	//淘宝ip地址归属地查询的公共接口
 	private static final String TB_INTERFACE = "http://ip.taobao.com/service/getIpInfo.php?ip=";
 	private JSONObject resultJSON = null;
 	private JSONObject dataJSON = null;
 	private StringBuffer buf = null;
 	
-	public IPUtils(String ip) {
+	public IPUtil(String ip) {
 		URL url = null;
 		HttpURLConnection httpConn = null;
 		BufferedReader reader = null;

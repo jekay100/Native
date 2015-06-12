@@ -15,7 +15,7 @@ import java.util.GregorianCalendar;
  * <p>Company: Enorbus</p>
  */
 
-public class DateUtils {
+public class DateUtil {
 	
 	public static final int MSECONDS_PER_DAY = 24 * 60 * 60 * 1000;
 	public static final int MSECONDS_PER_HOUR = 60 * 60 * 1000;
@@ -380,7 +380,7 @@ public class DateUtils {
 	public static java.util.Date getLastDayOfMonth(String dateStr) {
 		Calendar cl = Calendar.getInstance();
 		if (dateStr != null)
-			cl.setTime(DateUtils.getSysDate(dateStr));
+			cl.setTime(DateUtil.getSysDate(dateStr));
 		cl.add(Calendar.MONTH, 1);
 		cl.add(Calendar.DATE, -cl.get(Calendar.DAY_OF_MONTH));
 		return parseDate(cl);
@@ -420,7 +420,7 @@ public class DateUtils {
 	public static java.util.Date getFirstDayOfMonth(String dateStr) {
 		Calendar cl = Calendar.getInstance();
 		if (dateStr != null)
-			cl.setTime(DateUtils.getSysDate(dateStr));
+			cl.setTime(DateUtil.getSysDate(dateStr));
 		cl.add(Calendar.DATE, -cl.get(Calendar.DAY_OF_MONTH) + 1);
 		return parseDate(cl);
 	}
@@ -529,7 +529,7 @@ public class DateUtils {
 	 */
 	@SuppressWarnings("deprecation")
 	public static String datePart(String myDateStr, char interval) {
-		Date myDate = DateUtils.valueOf(myDateStr);
+		Date myDate = DateUtil.valueOf(myDateStr);
 		String partStr = "";
 		String[] Week = { "Su", "M", "Tu", "W", "Th", "Fr", "Sa" };
 		switch (interval) {

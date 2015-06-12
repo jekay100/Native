@@ -18,8 +18,8 @@ import org.apache.log4j.Logger;
  * @author LiaoGang
  */
 @SuppressWarnings("unchecked")
-public class ReflectionUtils {
-	private static Logger logger = Logger.getLogger(ReflectionUtils.class);
+public class ReflectionUtil {
+	private static Logger logger = Logger.getLogger(ReflectionUtil.class);
 	private static final String SETTER_PREFIX = "set";
 	private static final String GETTER_PREFIX = "get";
 	private static final String CGLIB_CLASS_SEPARATOR = "$$";
