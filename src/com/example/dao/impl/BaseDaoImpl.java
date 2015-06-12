@@ -12,6 +12,7 @@ import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
+import org.apache.log4j.Logger;
 
 import com.example.dao.BaseDao;
 import com.example.exception.DBException;
@@ -20,6 +21,7 @@ import com.example.utils.JDBCUtils;
 import com.example.utils.ReflectionUtils;
 
 public class BaseDaoImpl<T> implements BaseDao {
+	private static Logger logger = Logger.getLogger(BaseDaoImpl.class);
 	QueryRunner runner = new QueryRunner();
 	
 	private Class<T> clazz = null;
@@ -45,6 +47,7 @@ public class BaseDaoImpl<T> implements BaseDao {
 			conn = JDBCUtils.getConnection();
 			runner.update(conn, sql, args);
 		} catch (SQLException e) {
+			logger.debug(e.getMessage());
 			throw new DBException(e);
 		}
 	}
@@ -63,6 +66,7 @@ public class BaseDaoImpl<T> implements BaseDao {
 			conn = JDBCUtils.getConnection();
 			return runner.query(conn, sql, hanlder, args);
 		} catch (SQLException e) {
+			logger.debug(e.getMessage());
 			throw new DBException(e);
 		} 
 	}
@@ -117,6 +121,7 @@ public class BaseDaoImpl<T> implements BaseDao {
 			conn = JDBCUtils.getConnection();
 			runner.batch(conn, sql, params);
 		} catch(SQLException e){
+			logger.debug(e.getMessage());
 			throw new DBException(e);
 		}
 	}

@@ -6,6 +6,8 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
+
 import com.example.exception.DBException;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
@@ -18,11 +20,13 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
  */
 
 public class JDBCUtils {
+	private static Logger logger = Logger.getLogger(JDBCUtils.class);
 	//二级缓存
 	private static DataSource ds = null ;
 	//类似一级缓存
 	private static ThreadLocal<Connection> threadLocal = new ThreadLocal<>();
 	static {
+		logger.debug("加载c3p0配置文件 !");
 		ds = new ComboPooledDataSource("c3p0");
 	}
 	
@@ -36,6 +40,7 @@ public class JDBCUtils {
 				threadLocal.set(conn);
 			}
 		} catch (SQLException e) {
+			logger.debug(e.getMessage());
 			throw new DBException(e);
 		}
 		return conn;
@@ -49,6 +54,7 @@ public class JDBCUtils {
 				conn.close();
 			}
 		} catch (SQLException e) {
+			logger.debug(e.getMessage());
 			throw new DBException(e);
 		}
 	}

@@ -9,12 +9,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 /**
  * servlet的基类封装类
  */
 public class BaseServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	private static Logger logger = Logger.getLogger(BaseServlet.class);
+	
     public BaseServlet() {
         super();
     }
@@ -32,14 +35,19 @@ public class BaseServlet extends HttpServlet {
 			method = this.getClass().getMethod(methodName, HttpServletRequest.class, HttpServletResponse.class);
 			method.invoke(this, request, response);
 		} catch (NoSuchMethodException e) {
+			logger.debug(e.getMessage());
 			e.printStackTrace();
 		} catch (SecurityException e) {
+			logger.debug(e.getMessage());
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
+			logger.debug(e.getMessage());
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
+			logger.debug(e.getMessage());
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
+			logger.debug(e.getMessage());
 			e.printStackTrace();
 		}
 	}

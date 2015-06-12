@@ -16,7 +16,9 @@ public class MainTest {
 
 	@Test
 	public void testNull() {
-		BaseDaoImpl<User> dao = new BaseDaoImpl<>();
+		BaseDaoImpl<User> dao = new BaseDaoImpl<User>(){
+			
+		};
 		User user = new User(1, "阿亮", "123123", "liang@sina.com", null);
 		dao.saveOrUpdate(user);
 	}

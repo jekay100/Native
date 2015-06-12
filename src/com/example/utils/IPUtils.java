@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.apache.log4j.Logger;
+
 import net.sf.json.JSONObject;
 
 /**
@@ -14,7 +16,7 @@ import net.sf.json.JSONObject;
  * @version 1.0
  */
 public class IPUtils {
-	
+	private Logger logger = Logger.getLogger(IPUtils.class);
 	//淘宝ip地址归属地查询的公共接口
 	private static final String TB_INTERFACE = "http://ip.taobao.com/service/getIpInfo.php?ip=";
 	private JSONObject resultJSON = null;
@@ -44,12 +46,13 @@ public class IPUtils {
 				dataJSON = resultJSON.getJSONObject("data");
 			}
 		} catch (Exception e) {
-			
+			logger.debug(e.getMessage());
 		} finally {
 			if(reader!=null) {
 				try {
 					reader.close();
 				} catch (IOException e) {
+					logger.debug(e.getMessage());
 					e.printStackTrace();
 				}
 			}
