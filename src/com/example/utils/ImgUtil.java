@@ -23,7 +23,7 @@ public class ImgUtil {
 	}
 	
 	/**
-	 * 获取图片的高
+	 * 获取图片的宽
 	 * @param filePath
 	 * @return
 	 */

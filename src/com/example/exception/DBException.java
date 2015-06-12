@@ -3,7 +3,6 @@ package com.example.exception;
 /**
  * 有关事务处理的自定义的数据库异常
  * @author Administrator
- *
  */
 
 public class DBException extends RuntimeException {
