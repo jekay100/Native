@@ -19,4 +19,10 @@
     <servlet-name>BaseServlet</servlet-name>
     <url-pattern>/BaseServlet</url-pattern>
   </servlet-mapping>
+  <listener>
+    <listener-class>com.example.web.listener.OnlineListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>com.example.web.listener.OnlineListener</listener-class>
+  </listener>
 </web-app>
