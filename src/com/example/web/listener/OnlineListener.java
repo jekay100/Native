@@ -15,10 +15,17 @@ public class OnlineListener implements HttpSessionAttributeListener {
 	public static Map<Object, OnlineModel> onlines = new HashMap<>();
 	
     public OnlineListener() {
+    	
     }
 
     public void attributeRemoved(HttpSessionBindingEvent se)  { 
-    	
+    	if("user".equals(se.getName())) {
+    		OnlineModel model = (OnlineModel) se.getValue();
+    		Object userId = model.getUserId();
+    		if(!onlines.containsKey(userId)) {
+    			onlines.remove(userId);
+    		}
+    	}
     }
 
     public void attributeAdded(HttpSessionBindingEvent se)  { 

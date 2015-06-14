@@ -11,8 +11,7 @@ import java.util.GregorianCalendar;
 
 
 /**
- * <p>Description: DateUtil</p>
- * <p>Company: Enorbus</p>
+ * 日期工具类
  */
 
 public class DateUtil {
