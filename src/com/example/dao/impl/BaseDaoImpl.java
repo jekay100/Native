@@ -1,5 +1,6 @@
 package com.example.dao.impl;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -20,7 +21,7 @@ import com.example.utils.DateUtil;
 import com.example.utils.JDBCUtil;
 import com.example.utils.ReflectionUtil;
 
-public class BaseDaoImpl<T> implements BaseDao {
+public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 	private static Logger logger = Logger.getLogger(BaseDaoImpl.class);
 	QueryRunner runner = new QueryRunner();
 	
@@ -29,11 +30,15 @@ public class BaseDaoImpl<T> implements BaseDao {
 		clazz = ReflectionUtil.getClassGenricType(this.getClass());
 	}
 	
-	
-	public void saveOrUpdate(T t) {
+	/**
+	 * 保存一个对象
+	 * @param t
+	 */
+	public void save(T t) {
 		Object[] args = getSaveObjectSql(t);
 		update((String) args[0], (Object[])args[1]);
 	}
+	
 	
 	
 	/**
@@ -41,7 +46,7 @@ public class BaseDaoImpl<T> implements BaseDao {
 	 * @param sql
 	 * @param args
 	 */
-	public void update(String sql, Object ... args) {
+	protected void update(String sql, Object ... args) {
 		Connection conn = null;
 		try {
 			conn = JDBCUtil.getConnection();
@@ -59,7 +64,7 @@ public class BaseDaoImpl<T> implements BaseDao {
 	 * @param args
 	 * @return
 	 */
-	public T getInstance(String sql, Object ... args) {
+	protected T getInstance(String sql, Object ... args) {
 		ResultSetHandler<T> hanlder = new BeanHandler<T>(clazz);
 		Connection conn = null;
 		try {
@@ -78,7 +83,7 @@ public class BaseDaoImpl<T> implements BaseDao {
 	 * @param args
 	 * @return
 	 */
-	public List<T> getInstances(String sql, Object ... args) {
+	protected List<T> getInstances(String sql, Object ... args) {
 		ResultSetHandler<List<T>> handler = new BeanListHandler<T>(clazz);
 		Connection conn = null;
 		try {
@@ -97,7 +102,7 @@ public class BaseDaoImpl<T> implements BaseDao {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public <K> K getCount(String sql ,Object ... args) {
+	protected <K> K getCount(String sql ,Object ... args) {
 		Connection conn = null;
 		K k = null;
 		try {
@@ -111,11 +116,11 @@ public class BaseDaoImpl<T> implements BaseDao {
 	
 	
 	/**
-	 * 向表中指量量添加数据
+	 * 向表中批量添加数据
 	 * @param sql
 	 * @param params
 	 */
-	public void batchUpdate(String sql,Object[][] params){
+	protected void batchUpdate(String sql,Object[][] params){
 		Connection conn = null;
 		try{
 			conn = JDBCUtil.getConnection();
@@ -132,7 +137,7 @@ public class BaseDaoImpl<T> implements BaseDao {
 	 * @param object
 	 * @return
 	 */
-	public Object[] getSaveObjectSql(T t) {
+	protected Object[] getSaveObjectSql(T t) {
 		StringBuffer mBuf = new StringBuffer("");
 		StringBuffer vBuf = new StringBuffer("");
 		String tableName = t.getClass().getSimpleName().toLowerCase();
@@ -144,6 +149,9 @@ public class BaseDaoImpl<T> implements BaseDao {
 		Field[] fields = t.getClass().getDeclaredFields();
 		for(Field field : fields) {
 			String fieldName = field.getName();
+			if(fieldName.equals("id")) {
+				continue;
+			}
 			Object fieldValue = ReflectionUtil.invokeGetter(t, fieldName);
 			if(fieldValue == null) {
 			} else if(fieldValue instanceof Date) {
@@ -157,6 +165,7 @@ public class BaseDaoImpl<T> implements BaseDao {
 		mBuf.deleteCharAt(mBuf.length()-1).append(")");
 		vBuf.deleteCharAt(vBuf.length()-1).append(")");
 		String sql = mBuf.toString()+vBuf.toString();
+		logger.info("save object sql="+sql);
 		Object[] results = new Object[]{sql,vList.toArray()};
 		return results;
 	}
