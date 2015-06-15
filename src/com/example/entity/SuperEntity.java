@@ -1,11 +1,14 @@
 package com.example.entity;
 
+import java.io.Serializable;
+
 /**
  * 实体类的父类封装类, 抽取一些通用属性
  * @author anonymous
  *
  */
-public abstract class SuperEntity {
+public abstract class SuperEntity implements Serializable {
+	private static final long serialVersionUID = -8993705043233717545L;
 	protected Integer id;
 
 	public Integer getId() {

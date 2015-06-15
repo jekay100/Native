@@ -1,31 +1,35 @@
 package com.example.dao.impl;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.example.dao.BaseDao;
 import com.example.exception.DBException;
 import com.example.utils.DateUtil;
+import com.example.utils.Direction;
 import com.example.utils.JDBCUtil;
+import com.example.utils.Page;
 import com.example.utils.ReflectionUtil;
 
 
 /**
  * 持久层基类，封装通用的工具方法
  * @author anonymous
- *
  * @param <T>
  * @param <PK>
  */
@@ -34,19 +38,118 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 	QueryRunner runner = new QueryRunner();
 	
 	private Class<T> clazz = null;
+	protected String tableName = null;
 	{
 		clazz = ReflectionUtil.getClassGenricType(this.getClass());
+		if(clazz!=null) {
+			tableName = clazz.getSimpleName().toLowerCase();
+		}
 	}
 	
-	/**
-	 * 保存一个对象
-	 * @param t
-	 */
+	@Override
 	public void save(T t) {
 		Object[] args = getSaveObjectSql(t);
-		update((String) args[0], (Object[])args[1]);
+		this.update((String) args[0], (Object[])args[1]);
 	}
-	
+
+	@Override
+	public void delete(PK id) {
+		String sql = "delete from "+tableName+" where id=?";
+		this.update(sql, id);
+	}
+
+	@Override
+	public void update(T t) {
+		Object[] args = this.getUpdateObjectSql(t);
+		this.update((String) args[0], (Object[])args[1]);
+	}
+
+	@Override
+	public T getById(PK id) {
+		String sql = this.getSelectSql();
+		sql += " where id=?";
+		return this.getInstance(sql, id);
+	}
+
+	@Override
+	public List<T> getAll() {
+		String sql = this.getSelectSql();
+		return this.getInstances(sql);
+	}
+
+	@Override
+	public T getByProperty(String propertyName, Object propertyValue) {
+		String sql = this.getSelectSql();
+		sql += " where "+propertyName+"=?";
+		return this.getInstance(sql, propertyValue);
+	}
+
+	@Override
+	public List<T> getsByProperty(String propertyName, Object propertyValue) {
+		String sql = this.getSelectSql();
+		sql += " where "+propertyName+"=?";
+		return this.getInstances(sql, propertyValue);
+	}
+
+	@Override
+	public List<T> getsByProperty(String propertyName, Object propertyValue,
+			LinkedHashMap<String, Direction> orders) {
+		String sql = this.getSelectSql();
+		sql += " where "+propertyName+"=?";
+		StringBuffer buf = new StringBuffer("");
+		if(orders!=null && orders.size()>0) {
+			buf.append(" order by ");
+			for(String key : orders.keySet()) {
+				buf.append(key).append(" ")
+				.append(orders.get(key).toString())
+				.append(",");
+			}
+			buf.deleteCharAt(buf.length()-1);
+		}
+		sql += buf.toString();
+		return this.getInstances(sql, propertyValue);
+	}
+
+	@Override
+	public Page<T> getPage(Integer page, Integer pageSize,
+			LinkedHashMap<String, Direction> orders, String propertyName,
+			Object propertyValue) {
+		return null;
+	}
+
+	@Override
+	public int updatePropertyById(Long id, String propertyName,
+			Object propertyValue) {
+		StringBuffer buf = new StringBuffer("");
+		buf.append("update ").append(tableName)
+			.append(" set ")
+			.append(propertyName)
+			.append("=? ")
+			.append("where id=?");
+		return this.update(buf.toString(), propertyValue, id);
+	}
+
+	@Override
+	public <E> E getPropertyValueById(Long id, String propertyName) {
+		return null;
+	}
+
+	@Override
+	public List<T> like(String key, String property) {
+		String sql = this.getSelectSql();
+		sql += " where "+property+" like ?";
+		return this.getInstances(sql, "%"+key+"%");
+	}
+
+	@Override
+	public Set<T> getRandomData(Integer count) {
+		return null;
+	}
+
+	@Override
+	public T getRandomEntity() {
+		return null;
+	}
 	
 	
 	/**
@@ -54,11 +157,11 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 	 * @param sql
 	 * @param args
 	 */
-	protected void update(String sql, Object ... args) {
+	protected int update(String sql, Object ... args) {
 		Connection conn = null;
 		try {
 			conn = JDBCUtil.getConnection();
-			runner.update(conn, sql, args);
+			return runner.update(conn, sql, args);
 		} catch (SQLException e) {
 			logger.debug(e.getMessage());
 			throw new DBException(e);
@@ -148,27 +251,29 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 	protected Object[] getSaveObjectSql(T t) {
 		StringBuffer mBuf = new StringBuffer("");
 		StringBuffer vBuf = new StringBuffer("");
-		String tableName = t.getClass().getSimpleName().toLowerCase();
-		mBuf.append("insert into ")
+		mBuf.append("INSERT INTO ")
 			.append(tableName)
 			.append(" (");
-		vBuf.append(" values(");
+		vBuf.append(" VALUES(");
 		List<Object> vList = new ArrayList<>();
-		Field[] fields = t.getClass().getDeclaredFields();
-		for(Field field : fields) {
-			String fieldName = field.getName();
-			if(fieldName.equals("id")) {
-				continue;
+		Method[] methods = t.getClass().getMethods();
+		for(Method method : methods) {
+			String methodName = method.getName();
+			if(methodName.startsWith("get") && !methodName.equals("getClass")) {
+				String fieldName = StringUtils.uncapitalize(methodName.substring(3));
+				if(fieldName.equals("id")) {
+					continue;
+				}
+				Object fieldValue = ReflectionUtil.invokeGetter(t, fieldName);
+				if(fieldValue == null) {
+				} else if(fieldValue instanceof Date) {
+					Date date = (Date) fieldValue;
+					fieldValue = DateUtil.getDateTimeHtmStr(date);
+				}
+				mBuf.append(fieldName+",");
+				vBuf.append("?,");
+				vList.add(fieldValue);
 			}
-			Object fieldValue = ReflectionUtil.invokeGetter(t, fieldName);
-			if(fieldValue == null) {
-			} else if(fieldValue instanceof Date) {
-				Date date = (Date) fieldValue;
-				fieldValue = DateUtil.getDateTimeHtmStr(date);
-			}
-			mBuf.append(fieldName+",");
-			vBuf.append("?,");
-			vList.add(fieldValue);
 		}
 		mBuf.deleteCharAt(mBuf.length()-1).append(")");
 		vBuf.deleteCharAt(vBuf.length()-1).append(")");
@@ -177,5 +282,69 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 		Object[] results = new Object[]{sql,vList.toArray()};
 		return results;
 	}
-
+	
+	
+	/**
+	 * 获取更新对象的sql语句
+	 * @param object
+	 * @return
+	 */
+	protected Object[] getUpdateObjectSql(T t) {
+		StringBuffer mBuf = new StringBuffer("");
+		mBuf.append("update ")
+		.append(tableName)
+		.append(" set ");
+		List<Object> vList = new ArrayList<>();
+		Object id = null;
+		Method[] methods = t.getClass().getMethods();
+		for(Method method : methods) {
+			String methodName = method.getName();
+			if(methodName.startsWith("get") && !methodName.equals("getClass")) {
+				String fieldName = StringUtils.uncapitalize(methodName.substring(3));
+				if(fieldName.equals("id")) {
+					id = ReflectionUtil.invokeGetter(t, fieldName);
+					continue;
+				}
+				Object fieldValue = ReflectionUtil.invokeGetter(t, fieldName);
+				if(fieldValue == null) {
+				} else if(fieldValue instanceof Date) {
+					Date date = (Date) fieldValue;
+					fieldValue = DateUtil.getDateTimeHtmStr(date);
+				}
+				mBuf.append(fieldName+"=?,");
+				vList.add(fieldValue);
+			}
+		}
+		mBuf.deleteCharAt(mBuf.length()-1);
+		mBuf.append(" where id=?");
+		vList.add(id);
+		String sql = mBuf.toString();
+		logger.info("update object sql="+sql);
+		Object[] results = new Object[]{sql,vList.toArray()};
+		return results;
+	}
+	
+	
+	/**
+	 * 获取查询的sql语句
+	 * @return
+	 */
+	public String getSelectSql() {
+		StringBuffer mBuf = new StringBuffer("");
+		mBuf.append("select ");
+		Method[] methods = clazz.getMethods();
+		for(Method method : methods) {
+			String methodName = method.getName();
+			if(methodName.startsWith("get") && !methodName.equals("getClass")) {
+				String fieldName = StringUtils.uncapitalize(methodName.substring(3));
+				mBuf.append(fieldName+",");
+			}
+		}
+		mBuf.deleteCharAt(mBuf.length()-1);
+		mBuf.append(" from ")
+			.append(tableName);
+		String sql = mBuf.toString();
+		logger.info("select object sql="+sql);
+		return sql;
+	}
 }

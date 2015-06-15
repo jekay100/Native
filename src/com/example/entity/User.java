@@ -1,6 +1,7 @@
 package com.example.entity;
 
 public class User extends SuperEntity {
+	private static final long serialVersionUID = 6587804352897768224L;
 	private String username;
 	private String password;
 	private String email;
@@ -50,4 +51,11 @@ public class User extends SuperEntity {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+
+	@Override
+	public String toString() {
+		return "User [username=" + username + ", password=" + password
+				+ ", email=" + email + ", phone=" + phone + ", id=" + id + "]";
+	}
+	
 }
