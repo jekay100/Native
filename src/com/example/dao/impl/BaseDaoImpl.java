@@ -21,6 +21,14 @@ import com.example.utils.DateUtil;
 import com.example.utils.JDBCUtil;
 import com.example.utils.ReflectionUtil;
 
+
+/**
+ * 持久层基类，封装通用的工具方法
+ * @author anonymous
+ *
+ * @param <T>
+ * @param <PK>
+ */
 public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 	private static Logger logger = Logger.getLogger(BaseDaoImpl.class);
 	QueryRunner runner = new QueryRunner();

@@ -1,13 +1,9 @@
 package com.example.utils;
 
-
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import javax.sql.DataSource;
-
 import org.apache.log4j.Logger;
-
 import com.example.exception.DBException;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 

@@ -1,7 +1,6 @@
 package com.example.dao;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 持久层的基接口, 封装通用的接口方法 
