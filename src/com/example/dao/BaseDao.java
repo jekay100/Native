@@ -16,16 +16,41 @@ import com.example.utils.Page;
  */
 public interface BaseDao<T, PK extends Serializable> {
 	
-	//保存对象
+	/**
+	 * 保存对象
+	 * @param t
+	 */
 	public void save(T t);
-	//根据Id删除对应的对象
+	
+	
+	/**
+	 * 根据Id删除对应的对象
+	 * @param id
+	 */
 	public void delete(PK id);
-	//更新某个对象
+	
+	
+	/**
+	 * 更新某个对象
+	 * @param t
+	 */
 	public void update(T t);
-	//根据id获取某个对象
+	
+	
+	/**
+	 * 根据id获取某个对象
+	 * @param id
+	 * @return
+	 */
 	public T getById(PK id);
-	//获取所有对象
+	
+	
+	/**
+	 * 获取所有对象
+	 * @return
+	 */
 	public List<T> getAll();
+	
 	
 	/**
 	 * 根据对象的属性查询一个对象,此属性值必须是唯一的,所有只返回一个唯一的对象
@@ -86,6 +111,7 @@ public interface BaseDao<T, PK extends Serializable> {
 	 * @return
 	 */
 	public <E> E getPropertyValueById(Long id, String propertyName);
+	
 	
 	/**
 	 * 模糊查询 

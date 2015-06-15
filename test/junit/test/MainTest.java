@@ -1,7 +1,6 @@
 package junit.test;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -9,6 +8,7 @@ import org.junit.Test;
 import com.example.dao.impl.BaseDaoImpl;
 import com.example.entity.User;
 import com.example.utils.Direction;
+import com.example.utils.Page;
 import com.example.utils.StringUtil;
 
 public class MainTest {
@@ -24,7 +24,7 @@ public class MainTest {
 	public void testNull() {
 		BaseDaoImpl<User, Integer> dao = new BaseDaoImpl<User, Integer>(){
 		};
-		User user = new User(102, "阿亮2222222222", "123123", "liang@sina.com", null);
+//		User user = new User(102, "阿亮2222222222", "123123", "liang@sina.com", null);
 //		dao.save(user);
 //		dao.update(user);
 //		User dbuser = dao.getById(102);
@@ -48,10 +48,20 @@ public class MainTest {
 //			System.out.println(dbuser);
 //		}
 //		dao.updatePropertyById(102L, "username", "xxxx");
-		List<User> list = dao.like("ruler", "username");
-		for(User dbuser : list) {
+//		List<User> list = dao.like("ruler", "username");
+//		for(User dbuser : list) {
+//			System.out.println(dbuser);
+//		}
+//		String username = dao.getPropertyValueById(102L, "username");
+//		System.out.println(username);
+		
+		LinkedHashMap<String, Direction> orders = new LinkedHashMap<>();
+		orders.put("id", Direction.DESC);
+		Page<User> page = dao.getPage(1, 10, orders, "username", "lghuntfor");
+		for(User dbuser : page.getContent()) {
 			System.out.println(dbuser);
 		}
+		
 	}
 	
 }

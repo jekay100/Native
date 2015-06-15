@@ -3,6 +3,8 @@ package com.example.dao.impl;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,24 +48,28 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 		}
 	}
 	
+	
 	@Override
 	public void save(T t) {
 		Object[] args = getSaveObjectSql(t);
 		this.update((String) args[0], (Object[])args[1]);
 	}
 
+	
 	@Override
 	public void delete(PK id) {
 		String sql = "delete from "+tableName+" where id=?";
 		this.update(sql, id);
 	}
 
+	
 	@Override
 	public void update(T t) {
 		Object[] args = this.getUpdateObjectSql(t);
 		this.update((String) args[0], (Object[])args[1]);
 	}
 
+	
 	@Override
 	public T getById(PK id) {
 		String sql = this.getSelectSql();
@@ -71,6 +77,7 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 		return this.getInstance(sql, id);
 	}
 
+	
 	@Override
 	public List<T> getAll() {
 		String sql = this.getSelectSql();
@@ -114,8 +121,45 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 	public Page<T> getPage(Integer page, Integer pageSize,
 			LinkedHashMap<String, Direction> orders, String propertyName,
 			Object propertyValue) {
-		return null;
+		StringBuffer buf = new StringBuffer("select count(id) from "+tableName);
+		String tempSql = buf.toString();
+		Long total = null;
+		if(propertyName!=null) {
+			buf.append(" where ")
+				.append(propertyName)
+				.append("=?");
+			//获取条件查询中的总记录数
+			total = this.getCount(buf.toString(), propertyValue);
+		} else {
+			total = this.getCount(buf.toString());
+		}
+		
+		//添加排序条件
+		if(orders!=null && orders.size()>0) {
+			buf.append(" order by ");
+			for(String key : orders.keySet()) {
+				buf.append(key).append(" ")
+				.append(orders.get(key).toString())
+				.append(",");
+			}
+			buf.deleteCharAt(buf.length()-1);
+		}
+		
+		int index = (page-1)*pageSize;
+		//添加分页参数
+		buf.append(" limit ").append(index).append(",").append(pageSize);
+		String sql = this.getSelectSql();
+		sql = buf.toString().replace(tempSql, sql);
+		
+		List<T> content = null;
+		if(propertyName!=null) {
+			content = this.getInstances(sql, propertyValue);
+		} else {
+			content = this.getInstances(sql);
+		}
+		return new Page<>(content, page, total, pageSize);
 	}
+	
 
 	@Override
 	public int updatePropertyById(Long id, String propertyName,
@@ -129,22 +173,44 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 		return this.update(buf.toString(), propertyValue, id);
 	}
 
+	
+	@SuppressWarnings("unchecked")
 	@Override
 	public <E> E getPropertyValueById(Long id, String propertyName) {
-		return null;
+		Connection conn = null;
+		PreparedStatement ps = null;
+		String sql = null;
+		ResultSet rs = null;
+		try {
+			sql = "select "+propertyName+" from "+tableName+" where id=?";
+			conn = JDBCUtil.getConnection();
+			ps = conn.prepareStatement(sql);
+			ps.setLong(1, id);
+			rs = ps.executeQuery();
+			rs.next();
+			return (E) rs.getObject(propertyName);
+		} catch (SQLException e) {
+			logger.debug(e.getMessage());
+			throw new DBException(e);
+		} finally {
+			JDBCUtil.closeConn(conn, ps, rs);
+		}
 	}
 
+	
 	@Override
 	public List<T> like(String key, String property) {
 		String sql = this.getSelectSql();
 		sql += " where "+property+" like ?";
 		return this.getInstances(sql, "%"+key+"%");
 	}
-
+	
+	
 	@Override
 	public Set<T> getRandomData(Integer count) {
 		return null;
 	}
+	
 
 	@Override
 	public T getRandomEntity() {
@@ -221,6 +287,8 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 			k = (K) runner.query(conn, sql, new ScalarHandler(), args);
 		} catch (SQLException e) {
 			throw new DBException(e);
+		} finally {
+			JDBCUtil.closeConn(conn);
 		}
 		return k;
 	}
