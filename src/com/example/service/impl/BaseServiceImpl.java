@@ -14,7 +14,6 @@ import com.example.utils.Page;
 
 public class BaseServiceImpl<T, PK extends Serializable> implements BaseService<T,PK> {
 	
-//	private static Logger logger = Logger.getLogger(BaseServiceImpl.class);
 	private BaseDao<T, PK> baseDao = new BaseDaoImpl<>();
 	
 	
