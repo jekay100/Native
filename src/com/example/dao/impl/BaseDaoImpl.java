@@ -40,12 +40,8 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 	QueryRunner runner = new QueryRunner();
 	
 	private Class<T> clazz = null;
-	protected String tableName = null;
 	{
 		clazz = ReflectionUtil.getClassGenricType(this.getClass());
-		if(clazz!=null) {
-			tableName = clazz.getSimpleName().toLowerCase();
-		}
 	}
 	
 	
@@ -58,6 +54,7 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 	
 	@Override
 	public void delete(PK id) {
+		String tableName = clazz.getSimpleName().toLowerCase();
 		String sql = "delete from "+tableName+" where id=?";
 		this.update(sql, id);
 	}
@@ -121,7 +118,9 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 	public Page<T> getPage(Integer page, Integer pageSize,
 			LinkedHashMap<String, Direction> orders, String propertyName,
 			Object propertyValue) {
+		String tableName = clazz.getSimpleName().toLowerCase();
 		StringBuffer buf = new StringBuffer("select count(id) from "+tableName);
+		System.out.println(buf.toString());
 		String tempSql = buf.toString();
 		Long total = null;
 		if(propertyName!=null) {
@@ -160,10 +159,17 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 		return new Page<>(content, page, total, pageSize);
 	}
 	
+	
+	@Override
+	public Page<T> getPage(Integer page, Integer pageSize) {
+		return getPage(page, pageSize, null, null, null);
+	}
+	
 
 	@Override
 	public int updatePropertyById(Long id, String propertyName,
 			Object propertyValue) {
+		String tableName = clazz.getSimpleName().toLowerCase();
 		StringBuffer buf = new StringBuffer("");
 		buf.append("update ").append(tableName)
 			.append(" set ")
@@ -181,6 +187,7 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 		PreparedStatement ps = null;
 		String sql = null;
 		ResultSet rs = null;
+		String tableName = clazz.getSimpleName().toLowerCase();
 		try {
 			sql = "select "+propertyName+" from "+tableName+" where id=?";
 			conn = JDBCUtil.getConnection();
@@ -319,6 +326,7 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 	protected Object[] getSaveObjectSql(T t) {
 		StringBuffer mBuf = new StringBuffer("");
 		StringBuffer vBuf = new StringBuffer("");
+		String tableName = t.getClass().getSimpleName().toLowerCase();
 		mBuf.append("INSERT INTO ")
 			.append(tableName)
 			.append(" (");
@@ -359,6 +367,7 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 	 */
 	protected Object[] getUpdateObjectSql(T t) {
 		StringBuffer mBuf = new StringBuffer("");
+		String tableName = t.getClass().getSimpleName().toLowerCase();
 		mBuf.append("update ")
 		.append(tableName)
 		.append(" set ");
@@ -409,6 +418,7 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 			}
 		}
 		mBuf.deleteCharAt(mBuf.length()-1);
+		String tableName = clazz.getSimpleName().toLowerCase();
 		mBuf.append(" from ")
 			.append(tableName);
 		String sql = mBuf.toString();

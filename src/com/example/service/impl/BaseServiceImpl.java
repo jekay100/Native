@@ -14,7 +14,7 @@ import com.example.utils.Page;
 
 public class BaseServiceImpl<T, PK extends Serializable> implements BaseService<T,PK> {
 	
-	private BaseDao<T, PK> baseDao = new BaseDaoImpl<>();
+	private BaseDao<T, PK> baseDao = new BaseDaoImpl<T, PK>();
 	
 	
 	@Override
@@ -63,6 +63,11 @@ public class BaseServiceImpl<T, PK extends Serializable> implements BaseService<
 			LinkedHashMap<String, Direction> orders, String propertyName,
 			Object propertyValue) {
 		return baseDao.getPage(page, pageSize, orders, propertyName, propertyValue);
+	}
+	
+	@Override
+	public Page<T> getPage(Integer page, Integer pageSize) {
+		return baseDao.getPage(page, pageSize, null, null, null);
 	}
 
 	@Override

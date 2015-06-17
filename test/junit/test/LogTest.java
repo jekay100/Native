@@ -7,7 +7,7 @@ public class LogTest {
 	private Logger logger = Logger.getLogger(LogTest.class);
 	@Test
 	public void testLog() {
-		logger.debug("11111111111111111111111111111111111111");
-		logger.debug("22222222222222222222222222222222222222");
+		logger.info("log4j测试,info");
+		logger.debug("log4j测试,debug");
 	}
 }

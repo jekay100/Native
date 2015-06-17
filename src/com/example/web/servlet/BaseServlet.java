@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 
 import com.example.utils.RequestMaping;
 import com.example.utils.RequestMethod;
+import com.example.utils.WebUtil;
 
 /**
  * servlet的基类封装类
@@ -34,6 +35,11 @@ public class BaseServlet extends HttpServlet {
      */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Method method = filter(request, response);
+		if(method==null) { 
+			String path = request.getRequestURL().toString();
+			WebUtil.forwardUI(request, response, "message", path, "/error/404.jsp");;
+			return ;
+		}
 		RequestMaping annotation = method.getAnnotation(RequestMaping.class);
 		RequestMethod[] methods = annotation.method();
 		if(methods!=null ){
@@ -43,14 +49,11 @@ public class BaseServlet extends HttpServlet {
 						method.invoke(this, request, response);
 						return ;
 					} catch (IllegalAccessException e) {
-						logger.debug(e.getMessage());
-						e.printStackTrace();
+						logger.error(e.getMessage());
 					} catch (IllegalArgumentException e) {
-						logger.debug(e.getMessage());
-						e.printStackTrace();
+						logger.error(e.getMessage());
 					} catch (InvocationTargetException e) {
-						logger.debug(e.getMessage());
-						e.printStackTrace();
+						logger.error(e.getMessage());
 					}
 				} else {
 					response.getWriter().println("<div style='background: #525D76; color: white;font-size: 30px;'>HTTP Status 405 - Request method 'GET' not supported!</div>");
@@ -64,6 +67,11 @@ public class BaseServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Method method = filter(request, response);
+		if(method==null) { 
+			String path = request.getRequestURL().toString();
+			WebUtil.forwardUI(request, response, "message", path, "/error/404.jsp");
+			return ;
+		}
 		RequestMaping annotation = method.getAnnotation(RequestMaping.class);
 		RequestMethod[] methods = annotation.method();
 		if(methods!=null ){
@@ -73,14 +81,11 @@ public class BaseServlet extends HttpServlet {
 						method.invoke(this, request, response);
 						return ;
 					} catch (IllegalAccessException e) {
-						logger.debug(e.getMessage());
-						e.printStackTrace();
+						logger.error(e.getMessage());
 					} catch (IllegalArgumentException e) {
-						logger.debug(e.getMessage());
-						e.printStackTrace();
+						logger.error(e.getMessage());
 					} catch (InvocationTargetException e) {
-						logger.debug(e.getMessage());
-						e.printStackTrace();
+						logger.error(e.getMessage());
 					}
 				} else {
 					response.getWriter().println("<div style='background: #525D76; color: white;font-size: 30px;'>HTTP Status 405 - Request method 'GET' not supported!</div>");
@@ -98,17 +103,13 @@ public class BaseServlet extends HttpServlet {
 		try {
 			method = this.getClass().getMethod(methodName, HttpServletRequest.class, HttpServletResponse.class);
 		} catch (NoSuchMethodException e) {
-			logger.debug(e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (SecurityException e) {
-			logger.debug(e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} catch (IllegalArgumentException e) {
-			logger.debug(e.getMessage());
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return method;
 	}
-	
 	
 }

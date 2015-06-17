@@ -11,5 +11,4 @@ import java.lang.annotation.Target;
 @Documented
 public @interface RequestMaping {
 	public RequestMethod[] method() ; 
-	public String url() default "";
 }

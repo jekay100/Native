@@ -5,5 +5,5 @@ import com.example.entity.User;
 
 
 public class UserDaoImpl extends BaseDaoImpl<User, Integer> implements UserDao {
-
+	
 }

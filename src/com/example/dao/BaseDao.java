@@ -95,6 +95,18 @@ public interface BaseDao<T, PK extends Serializable> {
 	
 	
 	/**
+	 * 分页查询
+	 * @param page  页码,从0开始取
+	 * @param pageSize  每页显示多少条记录, 即从数据库中取多少条记录 
+	 * @param orders  排序条件,集合中的key需要与对象的属性名保持一致
+	 * @param propertyName  条件查询的属性名
+	 * @param propertyValue  条件查询属性的属性值
+	 * @return
+	 */
+	public Page<T> getPage(Integer page, Integer pageSize);
+	
+	
+	/**
 	 * 根据id更新数据库表中对应字段的值
 	 * @param id 需要修改的对象/数据库记录的id
 	 * @param propertyName  属性名,与对象的属性名称保持一致
