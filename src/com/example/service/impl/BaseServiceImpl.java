@@ -12,9 +12,16 @@ import com.example.service.BaseService;
 import com.example.utils.Direction;
 import com.example.utils.Page;
 
-public class BaseServiceImpl<T, PK extends Serializable> implements BaseService<T,PK> {
+/**
+ * 业务层基类的封装类,封装通用的方法
+ * @author anonymous
+ *
+ * @param <T>
+ * @param <PK>
+ */
+public abstract class BaseServiceImpl<T, PK extends Serializable> implements BaseService<T,PK> {
 	
-	private BaseDao<T, PK> baseDao = new BaseDaoImpl<T, PK>();
+	protected BaseDao<T, PK> baseDao = new BaseDaoImpl<T, PK>(){};
 	
 	
 	@Override

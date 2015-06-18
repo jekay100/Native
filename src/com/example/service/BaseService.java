@@ -8,6 +8,14 @@ import java.util.Set;
 import com.example.utils.Direction;
 import com.example.utils.Page;
 
+
+/**
+ * 业务层接口的基接口, 定义常用的业务方法
+ * @author anonymous
+ *
+ * @param <T>
+ * @param <PK>
+ */
 public interface BaseService<T, PK extends Serializable> {
 	/**
 	 * 保存对象

@@ -9,9 +9,16 @@
 		<link rel="stylesheet" href="${ctx}/static/css/login.css"/>
 	</head>
 	<body>
+		<div class='container' align="center">
+			<div class='content'>
+				<div class='login-title'>
+					<h1>XXX管理系统</h1>
+				</div>
+			</div>
+		</div>
 		<div class="container">
 	      <form class="form-signin">
-	        <h2 class="form-signin-heading">Please sign in</h2>
+	        <h2 class="form-signin-heading">please sign in</h2>
 	        <label for="inputUsername" class="sr-only">Email address</label>
 	        <input type="username" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
 	        <label for="inputPassword" class="sr-only">Password</label>

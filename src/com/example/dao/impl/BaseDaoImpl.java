@@ -30,16 +30,16 @@ import com.example.utils.ReflectionUtil;
 
 
 /**
- * 持久层基类，封装通用的工具方法
+ * 持久层基类，封装通用方法
  * @author anonymous
  * @param <T>
  * @param <PK>
  */
-public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
+public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 	private static Logger logger = Logger.getLogger(BaseDaoImpl.class);
 	QueryRunner runner = new QueryRunner();
 	
-	private Class<T> clazz = null;
+	protected Class<T> clazz = null;
 	{
 		clazz = ReflectionUtil.getClassGenricType(this.getClass());
 	}

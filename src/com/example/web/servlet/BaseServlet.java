@@ -20,7 +20,7 @@ import com.example.utils.WebUtil;
  * 创建此基类Servlet子类及子类的方法说明:
  * 创建子类servlet时的路径映射需使用/xxx/*
  * 
- * 路径中的*号即访问的子路径跟方法保
+ * 路径中的*号即访问的子路径跟方法名
  */
 public class BaseServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -54,6 +54,7 @@ public class BaseServlet extends HttpServlet {
 						logger.error(e.getMessage());
 					} catch (InvocationTargetException e) {
 						logger.error(e.getMessage());
+						e.printStackTrace();
 					}
 				} else {
 					response.getWriter().println("<div style='background: #525D76; color: white;font-size: 30px;'>HTTP Status 405 - Request method 'GET' not supported!</div>");

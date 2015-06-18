@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
+import com.example.dao.BaseDao;
 import com.example.dao.impl.BaseDaoImpl;
 import com.example.entity.User;
 import com.example.utils.Direction;
@@ -22,7 +23,7 @@ public class MainTest {
 
 	@Test
 	public void testNull() {
-		BaseDaoImpl<User, Integer> dao = new BaseDaoImpl<User, Integer>(){
+		BaseDao<User, Integer> dao = new BaseDaoImpl<User, Integer>(){
 		};
 //		User user = new User(102, "阿亮2222222222", "123123", "liang@sina.com", null);
 //		dao.save(user);
