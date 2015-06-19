@@ -1,6 +1,7 @@
 package com.example.service.impl;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import com.example.dao.UserDao;
 import com.example.dao.impl.UserDaoImpl;
@@ -34,4 +35,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, Integer> implements
 		return userDao.getPage(page, pageSize);
 	}
 
+	
+	@Override
+	public List<User> getAll() {
+		return userDao.getAll();
+	}
 }

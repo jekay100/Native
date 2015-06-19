@@ -1,6 +1,7 @@
 package junit.test;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -8,6 +9,7 @@ import org.junit.Test;
 import com.example.dao.BaseDao;
 import com.example.dao.impl.BaseDaoImpl;
 import com.example.entity.User;
+import com.example.service.impl.UserServiceImpl;
 import com.example.utils.Direction;
 import com.example.utils.Page;
 import com.example.utils.StringUtil;
@@ -56,12 +58,16 @@ public class MainTest {
 //		String username = dao.getPropertyValueById(102L, "username");
 //		System.out.println(username);
 		
-		LinkedHashMap<String, Direction> orders = new LinkedHashMap<>();
-		orders.put("id", Direction.DESC);
-		Page<User> page = dao.getPage(1, 10, orders, "username", "lghuntfor");
-		for(User dbuser : page.getContent()) {
-			System.out.println(dbuser);
-		}
+//		LinkedHashMap<String, Direction> orders = new LinkedHashMap<>();
+//		orders.put("id", Direction.DESC);
+//		Page<User> page = dao.getPage(1, 10, orders, "username", "lghuntfor");
+//		for(User dbuser : page.getContent()) {
+//			System.out.println(dbuser);
+//		}
+		
+		UserServiceImpl userService = new UserServiceImpl();
+		List<User> users= userService.getAll();
+		System.out.println(users.size());
 		
 	}
 	
