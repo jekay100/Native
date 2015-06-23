@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import com.example.utils.RequestMaping;
+import com.example.utils.RequestMapping;
 import com.example.utils.RequestMethod;
 import com.example.utils.WebUtil;
 
@@ -40,7 +40,7 @@ public class BaseServlet extends HttpServlet {
 			WebUtil.forwardUI(request, response, "message", path, "/error/404.jsp");;
 			return ;
 		}
-		RequestMaping annotation = method.getAnnotation(RequestMaping.class);
+		RequestMapping annotation = method.getAnnotation(RequestMapping.class);
 		RequestMethod[] methods = annotation.method();
 		if(methods!=null ){
 			for(RequestMethod reqMethod : methods) {
@@ -73,7 +73,7 @@ public class BaseServlet extends HttpServlet {
 			WebUtil.forwardUI(request, response, "message", path, "/error/404.jsp");
 			return ;
 		}
-		RequestMaping annotation = method.getAnnotation(RequestMaping.class);
+		RequestMapping annotation = method.getAnnotation(RequestMapping.class);
 		RequestMethod[] methods = annotation.method();
 		if(methods!=null ){
 			for(RequestMethod reqMethod : methods) {

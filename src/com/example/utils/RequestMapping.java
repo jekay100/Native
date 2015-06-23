@@ -15,6 +15,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface RequestMaping {
+public @interface RequestMapping {
 	public RequestMethod[] method() ; 
 }

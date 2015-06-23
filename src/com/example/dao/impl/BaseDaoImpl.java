@@ -65,7 +65,7 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 		Object[] args = this.getUpdateObjectSql(t);
 		this.update((String) args[0], (Object[])args[1]);
 	}
-
+	
 	
 	@Override
 	public T getById(PK id) {

@@ -13,7 +13,7 @@ import com.example.service.UserService;
 import com.example.service.impl.UserServiceImpl;
 import com.example.utils.MimeType;
 import com.example.utils.Page;
-import com.example.utils.RequestMaping;
+import com.example.utils.RequestMapping;
 import com.example.utils.RequestMethod;
 import com.example.utils.SmartFileUtil;
 import com.example.utils.WebUtil;
@@ -34,7 +34,7 @@ public class UserServlet extends BaseServlet {
 	 * @param request
 	 * @param response
 	 */
-	@RequestMaping(method=RequestMethod.GET)
+	@RequestMapping(method=RequestMethod.GET)
 	public void list(HttpServletRequest request, HttpServletResponse response) {
 		String pageNum = request.getParameter("pageNum");
 		int pageNo = 1;
@@ -47,24 +47,21 @@ public class UserServlet extends BaseServlet {
 			WebUtil.forwardUI(request, response, "msg", "success", "/WEB-INF/views/user/list.jsp");
 		} catch (ServletException e) {
 			logger.error(e.getMessage());
-			e.printStackTrace();
 		} catch (IOException e) {
 			logger.error(e.getMessage());
-			e.printStackTrace();
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
 	}
 	
 	//文件下载测试
-	@RequestMaping(method=RequestMethod.GET)
+	@RequestMapping(method=RequestMethod.GET)
 	public void download(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SmartUploadException {
 		SmartFileUtil.downloadFile(this.getServletConfig(), request, response, "G://学易爱听写_v1.3.4.apk", MimeType.APK, "学易.apk");
-	
 	}
 	
 	//文件上传测试
-	@RequestMaping(method=RequestMethod.POST)
+	@RequestMapping(method=RequestMethod.POST)
 	public void upload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SmartUploadException {
 		SmartFileUtil.upload(this.getServletConfig(), request, response, "/files");
 	}

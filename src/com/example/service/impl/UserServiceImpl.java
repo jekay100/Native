@@ -8,6 +8,7 @@ import com.example.dao.impl.UserDaoImpl;
 import com.example.entity.User;
 import com.example.service.UserService;
 import com.example.utils.Direction;
+import com.example.utils.Encodes;
 import com.example.utils.Page;
 
 /**
@@ -39,5 +40,31 @@ public class UserServiceImpl extends BaseServiceImpl<User, Integer> implements
 	@Override
 	public List<User> getAll() {
 		return userDao.getAll();
+	}
+	
+	
+	@Override
+	public void save(User user) {
+		String passwordEncode = this.passwordEncode(user.getPassword(), user.getUsername());
+		user.setPassword(passwordEncode);
+		userDao.save(user);
+	}
+	
+	
+	@Override
+	public void update(User user) {
+		userDao.update(user);
+	}
+	
+	/**
+	 * 用户密码的盐值加密密
+	 * @param password
+	 * @param halt
+	 * @return
+	 */
+	private String passwordEncode(String password, String halt) {
+		password = Encodes.encodeByMD5(password);
+		halt = Encodes.encodeByMD5(halt);
+		return Encodes.encodeByMD5(password+halt);
 	}
 }
