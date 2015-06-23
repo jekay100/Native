@@ -6,10 +6,10 @@
 <div id="page" style="text-align: center; padding: 6px 6px 8px 0;">
 	共${page.totalElements}条记录 &nbsp;当前第${page.number}页
 	&nbsp;共${page.totalPages}页 &nbsp;
-	<c:if test="${page.number>0}">
+	<c:if test="${page.number>1}">
 		<a href='?${queryString}&pageNum=1'>首页</a>&nbsp;<a
 			href="?${queryString}&pageNum=${page.number-1}">上一页</a>&nbsp;</c:if>
-	<c:if test="${page.number<page.totalPages-1}">
+	<c:if test="${page.number<page.totalPages}">
 		<a href='?${queryString}&pageNum=${page.number+1}'>下一页</a>&nbsp;<a
 			href='?${queryString}&pageNum=${page.totalPages}'>末页</a> &nbsp;</c:if>
 	&nbsp;转到 <input id="pageNum" type="text" size='1' /> 页 &nbsp;
