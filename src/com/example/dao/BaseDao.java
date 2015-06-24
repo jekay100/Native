@@ -113,7 +113,7 @@ public interface BaseDao<T, PK extends Serializable> {
 	 * @param propertyValue  该属性需要修改的值
 	 * @return
 	 */
-	public int updatePropertyById(Long id, String propertyName, Object propertyValue);
+	public int updatePropertyById(PK id, String propertyName, Object propertyValue);
 	
 	
 	/**
@@ -122,7 +122,7 @@ public interface BaseDao<T, PK extends Serializable> {
 	 * @param propertyName 属性名
 	 * @return
 	 */
-	public <E> E getPropertyValueById(Long id, String propertyName);
+	public <E> E getPropertyValueById(PK id, String propertyName);
 	
 	
 	/**
@@ -130,7 +130,7 @@ public interface BaseDao<T, PK extends Serializable> {
 	 * @param key 查询的关键字
 	 * @param property 模糊查询的字段
 	 */
-	public List<T> like(String key, String property);
+	public List<T> like(String propertyName, String key);
 	
 	
 	/**

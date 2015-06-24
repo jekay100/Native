@@ -167,7 +167,7 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 	
 
 	@Override
-	public int updatePropertyById(Long id, String propertyName,
+	public int updatePropertyById(PK id, String propertyName,
 			Object propertyValue) {
 		String tableName = clazz.getSimpleName().toLowerCase();
 		StringBuffer buf = new StringBuffer("");
@@ -182,7 +182,7 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public <E> E getPropertyValueById(Long id, String propertyName) {
+	public <E> E getPropertyValueById(PK id, String propertyName) {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		String sql = null;
@@ -192,7 +192,7 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 			sql = "select "+propertyName+" from "+tableName+" where id=?";
 			conn = JDBCUtil.getConnection();
 			ps = conn.prepareStatement(sql);
-			ps.setLong(1, id);
+			ps.setObject(1, id);
 			rs = ps.executeQuery();
 			rs.next();
 			return (E) rs.getObject(propertyName);
@@ -206,9 +206,9 @@ public abstract class BaseDaoImpl<T, PK extends Serializable> implements BaseDao
 
 	
 	@Override
-	public List<T> like(String key, String property) {
+	public List<T> like(String propertyName, String key) {
 		String sql = this.getSelectSql();
-		sql += " where "+property+" like ?";
+		sql += " where "+propertyName+" like ?";
 		return this.getInstances(sql, "%"+key+"%");
 	}
 	

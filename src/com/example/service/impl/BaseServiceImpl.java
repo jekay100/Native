@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 
+
+
 import com.example.dao.BaseDao;
 import com.example.dao.impl.BaseDaoImpl;
 import com.example.service.BaseService;
@@ -78,19 +80,19 @@ public abstract class BaseServiceImpl<T, PK extends Serializable> implements Bas
 	}
 
 	@Override
-	public int updatePropertyById(Long id, String propertyName,
+	public int updatePropertyById(PK id, String propertyName,
 			Object propertyValue) {
 		return baseDao.updatePropertyById(id, propertyName, propertyValue);
 	}
 
 	@Override
-	public <E> E getPropertyValueById(Long id, String propertyName) {
+	public <E> E getPropertyValueById(PK id, String propertyName) {
 		return baseDao.getPropertyValueById(id, propertyName);
 	}
 
 	@Override
-	public List<T> like(String key, String property) {
-		return baseDao.like(key, property);
+	public List<T> like(String propertyName, String key) {
+		return baseDao.like(propertyName, key);
 	}
 
 	@Override
