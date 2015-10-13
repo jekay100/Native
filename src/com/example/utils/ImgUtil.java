@@ -1,10 +1,16 @@
 package com.example.utils;
 
 import java.io.*;
+import java.util.Iterator;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+
 import com.sun.image.codec.jpeg.*;
 
 /**
@@ -93,4 +99,44 @@ public class ImgUtil {
 		}
 		return true;
 	}
+	
+	   /* 
+     * 图片裁剪通用接口 
+     */  
+  
+    @SuppressWarnings("rawtypes")
+	public static void cutImage(String src,String dest,int x,int y,int w,int h) throws IOException{   
+           Iterator iterator = ImageIO.getImageReadersByFormatName("jpg");   
+           ImageReader reader = (ImageReader)iterator.next();   
+           InputStream in=new FileInputStream(src);  
+           ImageInputStream iis = ImageIO.createImageInputStream(in);   
+           reader.setInput(iis, true);   
+           ImageReadParam param = reader.getDefaultReadParam();   
+           Rectangle rect = new Rectangle(x, y, w,h);    
+           param.setSourceRegion(rect);   
+           BufferedImage bi = reader.read(0,param);     
+           ImageIO.write(bi, "jpg", new File(dest));             
+  
+    }   
+    /* 
+     * 图片缩放 
+     */  
+    @SuppressWarnings("static-access")
+	public static void zoomImage(String src,String dest,int w,int h) throws Exception {  
+        double wr=0,hr=0;  
+        File srcFile = new File(src);  
+        File destFile = new File(dest);  
+        BufferedImage bufImg = ImageIO.read(srcFile);  
+        Image Itemp = bufImg.getScaledInstance(w, h, bufImg.SCALE_SMOOTH);  
+        wr=w*1.0/bufImg.getWidth();  
+        hr=h*1.0 / bufImg.getHeight();  
+        AffineTransformOp ato = new AffineTransformOp(AffineTransform.getScaleInstance(wr, hr), null);  
+        Itemp = ato.filter(bufImg, null);  
+        try {  
+            ImageIO.write((BufferedImage) Itemp,dest.substring(dest.lastIndexOf(".")+1), destFile);  
+        } catch (Exception ex) {  
+            ex.printStackTrace();  
+        }  
+          
+    }
 }

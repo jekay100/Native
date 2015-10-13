@@ -75,7 +75,7 @@ public class WebUtil {
 					if(method==null)
 						continue;
 				} catch (NoSuchMethodException e) {
-					logger.debug("name is not "+clazz.getSimpleName()+"`s field");
+					logger.warn(name + " is not "+clazz.getSimpleName()+"`s field");
 					continue;
 				}
 				
